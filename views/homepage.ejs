@@ -1,0 +1,105 @@
+<div ng-controller="navCtrl">
+  <ul style="list-style: none">
+    <li ng-click="page='accueil'"><a href="#">Accueil</a></li>
+    <li ng-click="page='pendu'"><a href="#">Pendu</a></li>
+    <li ng-click="page='blackjack'"><a href="#">Blackjack</a></li>
+    <li ng-click="page='chat'"><a href="#">Chat</a></li>
+    <li ng-click="page='arrows'"><a href="#">Arrows</a></li>
+    <li ng-click="page='autre'"><a href="#">Autre</a></li>
+  </ul>
+  <br/><br/>
+  <section ng-show="page=='accueil'">
+    <h1>Accueil</h1>
+  </section>
+  </section>
+
+  <section ng-show="page=='pendu'" id="pendu" ng-controller="penduCtrl">
+    <header>
+      <h1>Pendu</h1>
+    </header>
+    <div>erreurs restantes: {{errorsLeft}}</div>
+    <span ng-repeat="letter in letters"
+          style="margin: 10px; border-bottom: 1px solid; display:inline-block; text-align: center">
+    {{letter.hidden ? "*" : letter.letter}}
+  </span></br>
+    <form ng-submit="submit()">
+      <input ng-keypress="limitKeyPress($event)" ng-disabled="win || lose" ng-model="letterToTest" type="text">
+    </form>
+    <span ng-repeat="letter in lettersTested" ng-class="{'wrong': letter.error}"
+          style="margin: 10px;display:inline-block; text-align: center">
+    {{letter.letter}}
+  </span></br>
+    <div ng-show="win">Gagné!</div>
+    <div ng-show="lose">Perdu!</div>
+    <div ng-show="lose">La réponse était {{answer}}</div>
+    <form ng-show="replay">
+      <input type="submit" value="Rejouer?" ng-click="reset()">
+    </form>
+    <img src="images/pendu/{{image}}">
+  </section>
+
+  <section ng-show="page=='blackjack'" id="blackjack" ng-controller="bjCtrl">
+    <h1>Blackjack</h1>
+  </section>
+
+  <section ng-show="page=='chat'" id="chat" ng-controller="chatCtrl">
+    <h1>Chat</h1>
+    <div ng-show="!pseudoDefined">
+      <form ng-submit="formPseudoSubmit()">
+        <label>Veuillez choisir un pseudo:</label>
+        <input type="text" ng-model="pseudo">
+        <button type="submit">Valider</button>
+      </form>
+    </div>
+
+    <div id="messages-history"
+         style="height:500px; width:1000px; background-color:grey">
+      <div ng-repeat="message in messages">
+        <div ng-class="{'red':message.type=='info'}">
+          {{message.date}}<span ng-if="message.type!='info'"> - {{message.pseudo}}</span> :
+          <span ng-if="message.type=='image'"><img src="{{message.message}}" alt="image"></span>
+          <span ng-if="message.type=='text' || message.type=='info'">{{message.message}}</span>
+        </div>
+      </div>
+    </div>
+    <br/>
+    <form ng-submit="formChatSubmit()">
+      <select ng-disabled="!pseudoDefined" ng-model="messageType">
+        <option value="text">Texte</option>
+        <option value="image">Image</option>
+      </select>
+      <input ng-disabled="!pseudoDefined" ng-model="messageToSend" type="text" style="width: 934px"
+             placeholder="Ecrivez votre message ici" id="input-messageToSend"/>
+    </form>
+  </section>
+
+  <section ng-show="page=='arrows'" id="arrows" ng-controller="arrowsCtrl">
+    <h1>Arrows</h1>
+    <form ng-show="newRecord" ng-submit="submitNewRecord()">
+      Nouveau record!<br/>Entrez votre pseudo:
+      <input type="text" ng-model="pseudoRecord">
+      <button type="submit">Envoyer ce pseudo</button>
+    </form>
+
+    <div ng-show="showEndGame"
+         style="position:absolute; border:4px solid black; text-align:center;display:inline-block; width:200px; height:40px; font-weight: bold; font-size:18px; color:white; background-color: black; top:232px; left:122px">
+      score: {{score}}
+    </div>
+    <div ng-show="gameStarted" id="arrows-points">score: {{score}}</div>
+    <div ng-show="gameStarted" id="arrows-chrono">Time left: {{chrono}}</div>
+    <div tabindex="0" id="area-arrows" style="height:500px; width:500px; border:2px solid black"
+         ng-class="getBackground()">
+      <button ng-click="startGame()" ng-show="!gameStarted" style="margin-top:180px; margin-left:180px">Commencer!
+      </button>
+      <img ng-show="gameStarted" style="height:100px; width:100px; margin-top:120px; margin-left:180px"
+           src="images/arrows/{{src}}"
+           alt="fleche">
+    </div>
+  </section>
+
+  <section ng-show="page=='autre'">
+    <h1>Autre</h1>
+  </section>
+
+
+</div>
